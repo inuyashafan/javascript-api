@@ -1,23 +1,23 @@
-const getDataForPainting = async (artworkId) => {
-    let response = await axios.get(`https://api.artic.edu/api/v1/artworks/${artworkId}`);
-    return response.data;
+
+function loadData(artworkId) {
+    axios.get(`https://api.artic.edu/api/v1/artworks/${artworkId}`)
+        .then(response => {
+            const artwork = response.data.data;
+            const paintingDetails = document.getElementById('painting-details');
+            paintingDetails.innerHTML = `
+                <div class="list-group-item">
+                    <h3>${artwork.title}</h3>
+                    <p>Artist: ${artwork.artist_display}</p>
+                    <p>Date: ${artwork.date_display}</p>
+                    <img src="${artwork.thumbnail.lqip}" alt="${artwork.title}" class="img-fluid" height="200" width="200">
+                </div>
+            `;
+        })
+        .catch(error => {
+            console.error('Error fetching data:', error);
+        });
 }
 
-const displayPaintingDetails = (artwork) => {
-    const detailsContainer = document.getElementById('painting-details');
-    detailsContainer.innerHTML = `
-        <h2>${artwork.title}</h2>
-        <p>Artist: ${artwork.artist_title}</p>
-        <p>Date: ${artwork.date_display}</p>`;
-}
-const loadData = async (artworkId) => {
-    try {
-        const artwork = await getDataForPainting(artworkId);
-        const paintingUrl = `https://www.artic.edu/artworks/${artworkId}`;
-        window.open(paintingUrl, '_blank');
-    } catch (error) {
-        console.error('Error fetching data:', error);
-    }
-};
+
 
 
